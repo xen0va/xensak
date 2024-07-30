@@ -1,7 +1,7 @@
 import os
 import requests
 import zipfile
-import io
+from os.path import basename
 
 
 def count_shaders(title_id, data_path):
@@ -18,7 +18,7 @@ def count_shaders(title_id, data_path):
 
     print(f"Cache version: {cache_version}")
 
-    #needs to be replaced with a variable
+    # needs to be replaced with a variable
     if cache_version < 65537:
         return 0
 
@@ -47,5 +47,28 @@ def install_shaders(title_id, data_path):
 
     os.remove(shader_cache_dir + f"{title_id}.zip")
 
-def share_shaders():
-    print("WIP")
+
+def share_shaders(title_id, data_path):
+
+    shader_cache_dir = data_path + title_id + "\\cache\\shader\\"
+    shader_zip_dir = shader_cache_dir + title_id + ".zip"
+    shader_file_list = ['guest.toc', 'guest.data', 'shared.toc', 'shared.data']
+
+    try:
+        with zipfile.ZipFile(shader_zip_dir, 'w') as shader_cache_zip:
+            for file in shader_file_list:
+                shader_cache_zip.write(shader_cache_dir + file, basename(file))
+
+        with open(shader_zip_dir, 'rb') as file:
+            files = {'file': file}
+
+            print("Uploading...")
+            r = requests.post("http://localhost:8080/upload", files=files)
+
+            if r.status_code == 201:
+                print("Upload successful")
+            else:
+                print(f"Upload failed: {r.status_code}")
+
+    except Exception as e:
+        print(e)

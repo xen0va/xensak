@@ -37,3 +37,6 @@ selected_option = int(input("Pick an option"))
 
 if selected_option == 1:
     routes.shaders.install_shaders(title_id, data_path)
+
+if selected_option == 2:
+    routes.shaders.share_shaders(title_id, data_path)
