@@ -1,11 +1,15 @@
 import os
+import eel
 import requests
 import zipfile
 from os.path import basename
 
+data_path = os.path.join(os.getenv("appdata"), "Ryujinx", "games")
 
-def count_shaders(title_id, data_path):
-    shader_toc_file = data_path + title_id + "\\cache\\shader\\shared.toc"
+
+@eel.expose
+def count_shaders(title_id):
+    shader_toc_file = os.path.join(data_path, title_id, "cache", "shader", "shared.toc")
 
     if not os.path.exists(shader_toc_file):
         return 0
@@ -23,11 +27,12 @@ def count_shaders(title_id, data_path):
         return 0
 
     stat = os.stat(shader_toc_file)
-    print(max((stat.st_size - 32) / 8, 0))
+    return max((stat.st_size - 32) / 8, 0)
 
 
-def install_shaders(title_id, data_path):
-    shader_cache_dir = data_path + title_id + "\\cache\\shader\\"
+@eel.expose
+def install_shaders(title_id):
+    shader_cache_dir = os.path.join(data_path, title_id, "cache", "shader")
 
     if not os.path.exists(shader_cache_dir):
         print("Directory not found, creating folders")
@@ -48,7 +53,8 @@ def install_shaders(title_id, data_path):
     os.remove(shader_cache_dir + f"{title_id}.zip")
 
 
-def share_shaders(title_id, data_path):
+@eel.expose
+def share_shaders(title_id):
 
     shader_cache_dir = data_path + title_id + "\\cache\\shader\\"
     shader_zip_dir = shader_cache_dir + title_id + ".zip"

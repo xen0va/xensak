@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="/eel.js"></script>
+    </head>
+    <body onload="getShaderCount()" >
+    <a href="..\index.html">Back</a>
+    <div>
+        <h1 id="game-title"></h1>
+        <h2>Shader Count:</h2>
+        <p id="local-shader-count"></p>
+        <a href="#" id="install-shaders-btn">Install Shaders</a>
+    </div>
+
+
+    <script>
+
+        var localShaderCount;
+        const queryString = window.location.search;
+        console.log(queryString);
+        const urlParams = new URLSearchParams(queryString);
+        const gameTitle = document.querySelector("#game-title")
+        const gameId = urlParams.get('titleId')
+        gameTitle.textContent = urlParams.get('title')
+
+
+        async function getShaderCount() {
+
+            localShaderCount = document.querySelector("#local-shader-count")
+            localShaderCount.textContent = await eel.count_shaders(gameId)();
+
+        }
+
+        document.getElementById("install-shaders-btn").addEventListener("click", function() { eel.install_shaders(gameId) });
+
+    </script>
+    </body>
+</html>
