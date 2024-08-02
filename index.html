@@ -1,13 +1,162 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Hello World!</title>
 
-  </head>
-  <body>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
-    <script type="module" src="/src/renderer.ts"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>xensak</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #333;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 20px;
+      padding-left: 80px;
+      /* Adjusted for navbar width */
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .grid-item {
+      cursor: pointer;
+      background-color: #444;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      transition-duration: 0.5s;
+    }
+
+    .grid-item:hover {
+      box-shadow: 0px 5px 10px #1f1f1f;
+      transition-duration: 0.5s;
+    }
+
+    .grid-item img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .grid-item p {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 60px;
+      height: 100%;
+      background-color: #222;
+      overflow-x: hidden;
+      transition: width 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+    }
+
+    #navbar.expanded {
+      width: 200px;
+    }
+
+    .hamburger {
+      font-size: 30px;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      text-align: center;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-item {
+      width: 100%;
+      padding: 15px;
+      text-align: center;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      /* Align items to the start */
+    }
+
+    .nav-item:hover {
+      background-color: #575757;
+    }
+
+    .icon {
+      font-size: 24px;
+      margin-left: 10px;
+      flex-shrink: 0;
+      /* Prevent icons from shrinking */
+    }
+
+    .nav-title {
+      margin-left: 10px;
+      display: none;
+      white-space: nowrap;
+      /* Prevent text wrapping */
+    }
+
+    #navbar.expanded .nav-title {
+      display: inline;
+    }
+
+    .settings {
+      margin-top: auto;
+      width: 100%;
+      border-top: 1px solid #575757;
+    }
+  </style>
+</head>
+
+<body onload="loadGames()">
+  <div id="navbar">
+    <div class="hamburger" onclick="toggleNavbar()">☰</div>
+    <div class="nav-item">
+        <i class="icon">🏠</i>
+        <span class="nav-title">Home</span>
+    </div>
+    <div class="nav-item">
+        <i class="icon">🔍</i>
+        <span class="nav-title">Search</span>
+    </div>
+    <div class="nav-item">
+        <i class="icon">⭐</i>
+        <span class="nav-title">Favorites</span>
+    </div>
+    <div class="nav-item settings">
+        <i class="icon">⚙️</i>
+        <span class="nav-title">Settings</span>
+    </div>
+</div>
+  <div id="main-content">
+    <div id="container" class="grid-container">
+    </div>
+  </div>
+  <p id="gameList"></p>
+  <script>
+    function toggleNavbar() {
+      const navbar = document.getElementById('navbar');
+      navbar.classList.toggle('expanded');
+    }
+  </script>
+  <script src='./src/renderer.ts'></script>
+</body>
+
 </html>

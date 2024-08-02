@@ -1,1 +1,2 @@
-export type EmulatorGames = string[]
+export type EmulatorGames = {[key: string]: { title: string }}
+
