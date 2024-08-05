@@ -3,6 +3,15 @@ import fs from "fs"
 import path from "path"
 import { getRyujinxPath } from "./emulatorFilesystem"
 
+
+export const countShaders = async (titleId:string): Promise<number> => {
+
+    const dataPath = path.resolve(getRyujinxPath(), 'games', titleId, 'cache', 'shader')
+
+    const shaderCacheToc = path.resolve(dataPath, 'shared.toc')
+
+}
+
 export const installShaders = async (titleId:string): Promise<boolean> => {
     const zipUrl = 'http://localhost:8080/' + titleId + '.zip'
     const shaderDir = path.resolve(getRyujinxPath(), 'games', titleId, 'cache', 'shader')

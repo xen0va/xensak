@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>xensak</title>
+  <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #333;
@@ -114,3 +122,40 @@
       width: 100%;
       border-top: 1px solid #575757;
     }
+  </style>
+</head>
+<body>
+  <div id="navbar">
+    <div class="hamburger" onclick="toggleNavbar()">☰</div>
+    <div class="nav-item">
+        <i class="icon">🏠</i>
+        <span class="nav-title">Home</span>
+    </div>
+    <div class="nav-item">
+        <i class="icon">🔍</i>
+        <span class="nav-title">Search</span>
+    </div>
+    <div class="nav-item">
+        <i class="icon">⭐</i>
+        <span class="nav-title">Favorites</span>
+    </div>
+    <div class="nav-item settings">
+        <i class="icon">⚙️</i>
+        <span class="nav-title">Settings</span>
+    </div>
+</div>
+  <div id="main-content">
+    <div id="container" class="grid-container">
+    </div>
+  </div>
+  <p id="gameList"></p>
+  <script>
+    function toggleNavbar() {
+      const navbar = document.getElementById('navbar');
+      navbar.classList.toggle('expanded');
+    }
+  </script>
+  <script type="module" src='./src/renderer.ts'></script>
+</body>
+
+</html>

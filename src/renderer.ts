@@ -26,38 +26,14 @@
  * ```
  */
 
-//import './index.css';
+import './index.css';
 
+import { createApp } from 'vue';
+import App from '../App.vue';
+import { router } from './routes/index'
 
-
-async function loadGames() {
-
-    const gameList = await window.electronAPI.fetchGameList()
-
-    const container = document.getElementById('container');
-
-    Object.values(gameList).forEach(item => {
-
-        //Parameters should be replaced with IPC later, but this works for now
-
-        const gridItem = document.createElement('div');
-        gridItem.className = "grid-item";
-
-        //gridItem.addEventListener('click', function() {
-        //    window.location.href = `\\templates\\game_details.html?titleId=${item.id}&title=${item.title}`;
-        // });
-
-        const img = document.createElement('img');
-        img.src = '.\\src\\static\\assets\\images\\parl.png';
-
-        const paragraph = document.createElement('p');
-        paragraph.textContent = item.title;
-
-        gridItem.appendChild(img);
-        gridItem.appendChild(paragraph);
-
-        container.appendChild(gridItem);
-        });
-}
+createApp(App)
+.use(router)
+.mount('#app')
 
 console.log('👋 This message is being logged by "renderer.ts", included via Vite');
