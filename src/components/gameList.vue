@@ -1,37 +1,50 @@
 <template>
     <div id="main-content">
         <div id="container" class="grid-container">
-            <div v-for="game in games" :key="game.titleId" class="grid-item" @click="goToDetails(game.titleId, game.gameName)">
-                <img src="../static/assets/images/parl.png">
-            {{ game.gameName }}
+            <div v-for="game in gameList" :key="game.titleId" class="grid-item" @click="goToDetails(game.id, game.name)">
+                <img :src="game.iconUrl"> 
+            {{ game.name }}
         </div>
         </div>
     </div>
 </template>
   
-<script>
+<script lang="ts">
+
+import { eShopTitleMeta } from '../types';
+import { store } from '../store';
 
 export default {
   data() {
     return {
-      games: {},
+      gameList: [],
     };
   },
+
   async created() {
-    //this.games = await window.electronAPI.fetchGameList();
-    //console.log(await window.electronAPI.ping());
-    this.createLibrary()
-    
+    console.log("created function")
+    console.log(store.gameList.length)
+
+    if(store.gameList.length == 0) {
+      console.log("loading game list")
+      store.gameList = await this.createLibrary()
+    }
+    this.gameList = store.gameList
+    console.log(this.gameList)
   },
+
   methods: {
-    goToDetails(titleId, gameName) {
+    goToDetails(titleId:string, gameName:string) {
         console.log(titleId, gameName)
         this.$router.push({name:'gameDetails', params: {titleId, gameName}})
     },
     async createLibrary() {
-      var titleIdList = await window.electronAPI.fetchGameList();
-      titleIdList = titleIdList.filter(id => id !== "0000000000000000");
+      let titleIdList = await window.electronAPI.fetchGameList();
+      titleIdList = titleIdList.filter((id: string) => id !== "0000000000000000");
 
+      const gameList: eShopTitleMeta[] = await Promise.all(titleIdList.map(async (i:String) => window.electronAPI.getTitleMeta(i)))
+
+      return gameList
     }
   }
 

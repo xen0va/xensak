@@ -3,6 +3,7 @@ import path from 'path';
 import { loadGameList } from './routes/emulatorFilesystem';
 import { countShaders } from './routes/shaders';
 import { getWithProgress } from './routes/services/httpService';
+import { getEShopMeta } from './routes/services/eshopTitles';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -24,8 +25,8 @@ const createWindow = () => {
   ipcMain.handle('get-shader-count', async (event, titledId) => {
     return countShaders(titledId)
   })
-  ipcMain.handle('ping', async () => {
-    return 'pong';
+  ipcMain.handle('get-title-eshop-meta', async (event, titledId) => {
+    return getEShopMeta(titledId)
   })
 
   // and load the index.html of the app.
