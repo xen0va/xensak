@@ -1,6 +1,7 @@
 <template>
+    <img style="max-width: 256px;" :src="iconUrl">
     <p>Title ID: {{ titleId }}</p><br>
-    <p>Name: {{ gameName }}</p><br>
+    <p>Name: {{ name }}</p><br>
     <p>Local Shader Count: {{ localShaderCount }}</p>
     <RouterLink to="/">Go to Home</RouterLink>
 </template>
@@ -10,7 +11,8 @@
 export default{
     props: {
         titleId: String,
-        gameName: String,
+        name: String,
+        iconUrl: String,
         dataPath: String
     },
     data() {

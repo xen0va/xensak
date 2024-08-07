@@ -21,6 +21,7 @@ const createWindow = () => {
     },
   });
 
+  //Need to move these to a different file later.
   ipcMain.handle('load-game-list', loadGameList)
   ipcMain.handle('get-shader-count', async (event, titledId) => {
     return countShaders(titledId)

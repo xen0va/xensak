@@ -6,7 +6,7 @@ import gameList from '../components/gameList.vue'
 
 const routes = [
     {path: '/', name: 'home', component: gameList},
-    {path: '/game/:titleId:gameName', name: 'gameDetails', component: gameDetails, props: true}
+    {path: '/game/:titleId:name:iconUrl', name: 'gameDetails', component: gameDetails, props: true}
 ]
 
 export const router = createRouter({

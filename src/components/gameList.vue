@@ -1,10 +1,11 @@
 <template>
     <div id="main-content">
         <div id="container" class="grid-container">
-            <div v-for="game in gameList" :key="game.titleId" class="grid-item" @click="goToDetails(game.id, game.name)">
-                <img :src="game.iconUrl"> 
-            {{ game.name }}
-        </div>
+            <div v-for="game in gameList" :key="game.titleId" class="grid-item" @click="goToDetails(game.id, game.name, game.iconUrl)">
+                <img v-if="(game.iconUrl !== '')" :src="game.iconUrl"> 
+                <img v-else src="../static/assets/images/parl.png">
+                <p>{{ game.name }}</p>
+            </div>
         </div>
     </div>
 </template>
@@ -22,11 +23,8 @@ export default {
   },
 
   async created() {
-    console.log("created function")
-    console.log(store.gameList.length)
-
+    //Checks length of stored game list, if 0 then refreshes the library
     if(store.gameList.length == 0) {
-      console.log("loading game list")
       store.gameList = await this.createLibrary()
     }
     this.gameList = store.gameList
@@ -34,9 +32,8 @@ export default {
   },
 
   methods: {
-    goToDetails(titleId:string, gameName:string) {
-        console.log(titleId, gameName)
-        this.$router.push({name:'gameDetails', params: {titleId, gameName}})
+    goToDetails(titleId:string, name:string, iconUrl:string) {
+        this.$router.push({name:'gameDetails', params: {titleId, name, iconUrl}})
     },
     async createLibrary() {
       let titleIdList = await window.electronAPI.fetchGameList();
@@ -89,78 +86,7 @@ export default {
     }
 
     .grid-item p {
-      margin-top: 10px;
+      margin-top: 20px;
       font-size: 14px;
-    }
-
-    #navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 60px;
-      height: 100%;
-      background-color: #222;
-      overflow-x: hidden;
-      transition: width 0.3s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 1;
-    }
-
-    #navbar.expanded {
-      width: 200px;
-    }
-
-    .hamburger {
-      font-size: 30px;
-      color: white;
-      padding: 10px;
-      cursor: pointer;
-      margin-bottom: 20px;
-      text-align: center;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .nav-item {
-      width: 100%;
-      padding: 15px;
-      text-align: center;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: start;
-      /* Align items to the start */
-    }
-
-    .nav-item:hover {
-      background-color: #575757;
-    }
-
-    .icon {
-      font-size: 24px;
-      margin-left: 10px;
-      flex-shrink: 0;
-      /* Prevent icons from shrinking */
-    }
-
-    .nav-title {
-      margin-left: 10px;
-      display: none;
-      white-space: nowrap;
-      /* Prevent text wrapping */
-    }
-
-    #navbar.expanded .nav-title {
-      display: inline;
-    }
-
-    .settings {
-      margin-top: auto;
-      width: 100%;
-      border-top: 1px solid #575757;
     }
 </style>
