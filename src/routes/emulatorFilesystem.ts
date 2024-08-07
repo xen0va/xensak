@@ -19,6 +19,8 @@ export const loadGameList = async ():Promise<EmulatorGames> => {
     const dataPath:string = getRyujinxPath();
     const directories = fs.readdirSync(path.join(dataPath, "games"), {withFileTypes: true}).filter(d => d.isDirectory()).map(d => d.name.toLowerCase());
     
+    return directories
+
     //Clear existing list when fetching data again. Ideally this list isn't stored here, will fix later.
     gameList.length = 0
 
@@ -33,5 +35,5 @@ export const loadGameList = async ():Promise<EmulatorGames> => {
 
     });
     console.log(gameList);
-    return gameList
+    //return gameList
 }

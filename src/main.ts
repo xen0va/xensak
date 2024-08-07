@@ -1,6 +1,8 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import { loadGameList } from './routes/emulatorFilesystem';
+import { countShaders } from './routes/shaders';
+import { getWithProgress } from './routes/services/httpService';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -14,10 +16,17 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
     },
   });
 
   ipcMain.handle('load-game-list', loadGameList)
+  ipcMain.handle('get-shader-count', async (event, titledId) => {
+    return countShaders(titledId)
+  })
+  ipcMain.handle('ping', async () => {
+    return 'pong';
+  })
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {

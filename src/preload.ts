@@ -4,5 +4,6 @@
 const { contextBridge, ipcRenderer } = require('electron/renderer')
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  fetchGameList: () => ipcRenderer.invoke('load-game-list')
-})
+  fetchGameList: () => ipcRenderer.invoke('load-game-list'),
+  getShaderCount: (titleId:string) => ipcRenderer.invoke('get-shader-count', titleId)
+});
