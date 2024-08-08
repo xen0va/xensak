@@ -7,7 +7,7 @@ export default {}
 </script>
 <style>
 body {
-      font-family: Arial, sans-serif;
+      font-family: Roboto, Helvetica, Arial, sans-serif;
       background-color: #333;
       color: #fff;
     }
