@@ -3,16 +3,14 @@
         <div id="container" class="grid-container">
             <div v-for="game in gameList" :key="game.titleId" class="grid-item" @click="goToDetails(game.id, game.name, game.iconUrl)">
                 <img v-if="(game.iconUrl !== '')" :src="game.iconUrl"> 
-                <img v-else src="../static/assets/images/parl.png">
+                <img v-else src="../static/assets/images/default.png">
                 <p>{{ game.name }}</p>
             </div>
         </div>
     </div>
 </template>
   
-<script lang="ts">
-
-import { eShopTitleMeta } from '../types';
+<script>
 import { store } from '../store';
 
 export default {
@@ -28,18 +26,17 @@ export default {
       store.gameList = await this.createLibrary()
     }
     this.gameList = store.gameList
-    console.log(this.gameList)
   },
 
   methods: {
-    goToDetails(titleId:string, name:string, iconUrl:string) {
+    goToDetails(titleId, name, iconUrl) {
         this.$router.push({name:'gameDetails', params: {titleId, name, iconUrl}})
     },
     async createLibrary() {
       let titleIdList = await window.electronAPI.fetchGameList();
-      titleIdList = titleIdList.filter((id: string) => id !== "0000000000000000");
+      titleIdList = titleIdList.filter((id) => id !== "0000000000000000");
 
-      const gameList: eShopTitleMeta[] = await Promise.all(titleIdList.map(async (i:String) => window.electronAPI.getTitleMeta(i)))
+      const gameList = await Promise.all(titleIdList.map(async (i) => window.electronAPI.getTitleMeta(i)))
 
       return gameList
     }
@@ -59,7 +56,7 @@ export default {
 
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
       gap: 20px;
       padding: 20px;
       max-width: 1200px;

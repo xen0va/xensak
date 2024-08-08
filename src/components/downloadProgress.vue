@@ -1,8 +1,12 @@
 <template>
+    <p>{{ receivedBytes }}/{{ totalBytes }}</p>
 </template>
 
 <script>
 export default {
-    //props:
+    props: {
+        receivedBytes: Number,
+        totalBytes: Number
+    }
 }
 </script>

@@ -1,7 +1,9 @@
 import http from "http"
 import fs from "fs-extra"
 import path from "path"
+import zip from "adm-zip"
 import { getRyujinxPath } from "./emulatorFilesystem"
+import { downloadShaders, getWithProgress } from "./services/httpService"
 
 
 export const countShaders = async (titleId:string): Promise<number> => {
@@ -18,25 +20,23 @@ export const countShaders = async (titleId:string): Promise<number> => {
 
 }
 
-export const installShaders = async (titleId:string): Promise<boolean> => {
-    const zipUrl = 'http://localhost:8080/' + titleId + '.zip'
-    const shaderDir = path.resolve(getRyujinxPath(), 'games', titleId, 'cache', 'shader')
-    
-    console.log(shaderDir)
+export const installShaders = async (titleId:string):Promise<boolean> => {
+    const shaderCacheDir = path.resolve(getRyujinxPath(), 'games', titleId, 'cache', 'shader')
+    const shaderCacheZipPath = path.resolve(shaderCacheDir, `${titleId}.zip`)
 
-    const shaderZip = fs.createWriteStream(path.resolve(shaderDir, `${titleId}.zip` ))
+    await fs.ensureDir(shaderCacheDir)
+    await fs.emptyDir(shaderCacheDir)
 
-    http.get(zipUrl, (response) => {
-        response.pipe(shaderZip);
-        shaderZip.on('finish', () => {
-            shaderZip.close(() => {
-                console.log(`shader cache for ${titleId} downloaded`)
-                return true
-            });
-        });
-    }).on('error', (err) => fs.unlink(shaderDir, () => {
-        console.log("Download error")
-        return false
-    }))
-    return
+    const result = await downloadShaders(titleId, shaderCacheZipPath)
+
+    if(!result) {
+        return null
+    }
+
+    const shaderCacheZip = new zip(shaderCacheZipPath)
+    shaderCacheZip.extractAllTo(shaderCacheDir, true)
+    await fs.unlink(shaderCacheZipPath)
+
+    return true
+
 }

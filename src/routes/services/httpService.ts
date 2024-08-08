@@ -5,38 +5,43 @@ import path from 'path'
 import { app, App } from "electron"
 import http from 'http';
 
-const CDN_URL:string = "https://localhost:8080/" 
+const CDN_URL:string = "http://localhost:8080" 
 
 export enum HTTP_PATHS {
     SHADER_ZIP  = "/nintendo/shaders/{title_id}.zip",
 }
 
-export const getWithProgress = async (titleId:string, destinationPath:string, url:string) => {
-    const file = fs.createWriteStream(path.join(app.getAppPath(), `${titleId}.zip`))
+export const getWithProgress = async (destinationPath:string, url:string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+    const file = fs.createWriteStream(destinationPath)
     let receivedBytes = 0
     let totalBytes = 0
 
     var currentRequest = http.get(url, (response) => {
         totalBytes = parseInt(response.headers['content-length'], 10);
+        
+            response.on('data', (chunk) => {
+                receivedBytes += chunk.length;
+                file.write(chunk)
+            })
+            response.on('end', () => {
+                file.end()
+                currentRequest = null
+            })
+            response.on('error', () => {
+                reject(false)
+            })
 
-        response.on('data', (chunk) => {
-            receivedBytes += chunk.length;
-            file.write(chunk)
-            console.log(receivedBytes)
+            file.on("finish", () => {
+                destinationPath
+                resolve(true)
+            })
         })
+    }).catch(() => null)
+}
 
-        response.on('end', () => {
-            file.end()
-            currentRequest = null
-        })
-
-        response.on('error', (err) => {
-            console.log(`Download error: ${err}`)
-        })
-
-
-
-    })
-
+export const downloadShaders = async(titleId:string, destinationPath:string): Promise<boolean> => {
+    const url = CDN_URL + HTTP_PATHS.SHADER_ZIP.replace("{title_id}", titleId)
+    return getWithProgress(destinationPath, url)
 }
 

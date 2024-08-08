@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import { loadGameList } from './routes/emulatorFilesystem';
-import { countShaders } from './routes/shaders';
+import { countShaders, installShaders } from './routes/shaders';
 import { getWithProgress } from './routes/services/httpService';
 import { getEShopMeta } from './routes/services/eshopTitles';
 
@@ -28,6 +28,9 @@ const createWindow = () => {
   })
   ipcMain.handle('get-title-eshop-meta', async (event, titledId) => {
     return getEShopMeta(titledId)
+  })
+  ipcMain.handle('download-shaders', async (event, titleId) => {
+    return installShaders(titleId)
   })
 
   // and load the index.html of the app.
